@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Delete Contact</h4>
+            </div>
+            <div class="card-body">
+                <p>Are you sure you want to delete the contact <strong>{{ object }}</strong>?</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'patient_detail' object.patient.pk %}" class="btn btn-secondary">Cancel</a>
+                        {% bootstrap_button button_type="submit" content="Confirm Delete" button_class="btn-danger" %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

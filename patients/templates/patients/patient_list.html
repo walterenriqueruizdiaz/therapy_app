@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Patients{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Patients</h2>
+    <a href="{% url 'patient_create' %}" class="btn btn-primary">Create New Patient</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-10">
+                <input type="text" name="q" class="form-control" placeholder="Search by name or DNI"
+                    value="{{ request.GET.q }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-secondary w-100">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>DNI</th>
+                <th>Phone</th>
+                <th>Medical Coverage</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>{{ patient }}</td>
+                <td>{{ patient.dni }}</td>
+                <td>{{ patient.mobile_phone }}</td>
+                <td>{{ patient.medical_coverage }}</td>
+                <td>
+                    <a href="{% url 'patient_detail' patient.pk %}" class="btn btn-sm btn-info text-white">View</a>
+                    <a href="{% url 'patient_update' patient.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">No patients found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

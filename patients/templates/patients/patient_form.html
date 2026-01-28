@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+{% block title %}{% if object %}Edit Patient{% else %}New Patient{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">{% if object %}Edit Patient: {{ object }}{% else %}Create New Patient{% endif %}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'patient_list' %}" class="btn btn-secondary">Cancel</a>
+                        {% bootstrap_button button_type="submit" content="Save" %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

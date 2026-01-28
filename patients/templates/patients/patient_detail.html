@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Paciente: {{ object }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Paciente: {{ object.first_name }} {{ object.last_name }}</h2>
+    <div>
+        <a href="{% url 'patient_update' object.pk %}" class="btn btn-outline-primary">Edit Patient</a>
+        <a href="{% url 'patient_list' %}" class="btn btn-outline-secondary">Back to List</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">Basic Information</div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">DNI</dt>
+                    <dd class="col-sm-8">{{ object.dni }}</dd>
+
+                    <dt class="col-sm-4">Birth Date</dt>
+                    <dd class="col-sm-8">{{ object.birth_date|date:"d/m/Y" }}</dd>
+
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8">{{ object.email|default:"-" }}</dd>
+
+                    <dt class="col-sm-4">Mobile</dt>
+                    <dd class="col-sm-8">{{ object.mobile_phone|default:"-" }}</dd>
+
+                    <dt class="col-sm-4">Medical Coverage</dt>
+                    <dd class="col-sm-8">{{ object.medical_coverage|default:"-" }}</dd>
+
+                    <dt class="col-sm-4">SSN</dt>
+                    <dd class="col-sm-8">{{ object.social_security_number|default:"-" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Family & Contacts</span>
+                <a href="{% url 'contact_create' object.pk %}" class="btn btn-sm btn-primary">Add Contact</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% if object.contacts.exists %}
+                {% for contact in object.contacts.all %}
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>{{ contact.first_name }} {{ contact.last_name }}</strong>
+                            <span class="badge bg-secondary ms-2">{{ contact.relationship_to_patient }}</span>
+                            <small class="d-block text-muted">Phone: {{ contact.mobile_phone }}</small>
+                            {% if contact.email %}<small class="d-block text-muted">Email: {{ contact.email
+                                }}</small>{%endif %}
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'contact_update' contact.pk %}" class="btn btn-outline-secondary"
+                                title="Edit">Edit</a>
+                            <a href="{% url 'contact_delete' contact.pk %}" class="btn btn-outline-danger"
+                                title="Delete">Delete</a>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+                {% else %}
+                <li class="list-group-item text-muted">No contacts added yet.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Therapy App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h2>Welcome, {{ user.professional.first_name }}</h2>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <a href="{% url 'patient_create' %}" class="btn btn-primary w-100 py-3 mb-2">Create New Patient</a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'schedule' %}" class="btn btn-outline-primary w-100 py-3 mb-2">View This Week's Schedule</a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'session_list' %}" class="btn btn-outline-secondary w-100 py-3 mb-2">Go to Sessions</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Today's Appointments</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for appt in today_appointments %}
+                <a href="{% url 'session_create' appt.pk %}"
+                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ appt.date_time|date:"H:i" }}</strong> - {{ appt.patient }}
+                    </div>
+                    <span
+                        class="badge bg-{% if appt.status == 'confirmed' %}success{% elif appt.status == 'cancelled' %}danger{% else %}secondary{% endif %} rounded-pill">
+                        {{ appt.get_status_display }}
+                    </span>
+                </a>
+                {% empty %}
+                <div class="list-group-item text-muted">No appointments today.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">This Week Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <h3 class="text-primary">{{ week_stats.total }}</h3>
+                        <small class="text-muted">Total Appointments</small>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h3 class="text-success">{{ week_stats.completed_sessions }}</h3>
+                        <small class="text-muted">Completed Sessions</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-danger">{{ week_stats.cancelled }}</h3>
+                        <small class="text-muted">Cancelled</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-warning">{{ week_stats.no_show }}</h3>
+                        <small class="text-muted">No Shows</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

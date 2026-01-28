@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Weekly Schedule{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Schedule</h2>
+    <a href="{% url 'appointment_create' %}" class="btn btn-primary">New Appointment</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <a href="?week_start={{ prev_week }}" class="btn btn-outline-secondary">&laquo; Previous Week</a>
+        <h5 class="mb-0">{{ start_week|date:"M d" }} - {{ end_week|date:"M d, Y" }}</h5>
+        <a href="?week_start={{ next_week }}" class="btn btn-outline-secondary">Next Week &raquo;</a>
+    </div>
+</div>
+
+{% regroup appointments by date_time.date as appointment_list %}
+
+<div class="row">
+    {% for date_group in appointment_list %}
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-header bg-light">
+                <strong>{{ date_group.grouper|date:"l, F d" }}</strong>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for appt in date_group.list %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary me-2">{{ appt.date_time|date:"H:i" }}</span>
+                        <strong>{{ appt.patient }}</strong>
+                        <span
+                            class="badge bg-{% if appt.status == 'confirmed' %}success{% elif appt.status == 'cancelled' %}danger{% else %}secondary{% endif %} ms-2">
+                            {{ appt.get_status_display }}
+                        </span>
+                    </div>
+                    <div>
+                        {% if not appt.session %}
+                        <a href="{% url 'session_create' appt.pk %}" class="btn btn-sm btn-outline-success">Start
+                            Session</a>
+                        {% else %}
+                        <a href="{% url 'session_edit' appt.session.pk %}" class="btn btn-sm btn-outline-info">Edit
+                            Session</a>
+                        {% endif %}
+                        <a href="{% url 'appointment_delete' appt.pk %}" class="btn btn-sm btn-outline-danger ms-1"
+                            title="Delete Appointment">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">No appointments for this week.</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

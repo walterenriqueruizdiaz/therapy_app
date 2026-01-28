@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Sessions History{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2>Sessions History</h2>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Patient</th>
+                <th>Type</th>
+                <th>Notes Preview</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+            <tr>
+                <td>{{ session.date }}</td>
+                <td>{{ session.time }}</td>
+                <td>{{ session.patient }}</td>
+                <td>{{ session.get_session_type_display }}</td>
+                <td>{{ session.notes|truncatechars:50 }}</td>
+                <td>
+                    <a href="{% url 'session_edit' session.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">No sessions recorded yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

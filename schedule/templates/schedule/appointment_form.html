@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+{% block title %}New Appointment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">Create New Appointment</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <div class="alert alert-info">
+                        <small>Selecting recurrence will create multiple appointments until the end of the year.</small>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'schedule' %}" class="btn btn-secondary">Cancel</a>
+                        {% bootstrap_button button_type="submit" content="Create Appointment(s)" %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

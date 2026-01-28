@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+{% load bootstrap5 %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <h1 class="mb-4">Therapy App</h1>
+        <div class="card shadow-sm">
+            <div class="card-body p-5">
+                <h3 class="card-title mb-4">Professional Login</h3>
+                <p>Please sign in with your Google account.</p>
+
+                {% get_providers as socialaccount_providers %}
+
+                {% for provider in socialaccount_providers %}
+                <a href="{% provider_login_url provider.id process='login' %}" class="btn btn-danger btn-lg w-100 mb-3">
+                    <i class="bi bi-google me-2"></i> Sign in with {{ provider.name }}
+                </a>
+                {% endfor %}
+
+                {% if not socialaccount_providers %}
+                <div class="alert alert-warning">
+                    No social providers configured. Please configure Google OAuth in Django Admin.
+                </div>
+                <!-- Fallback to standard login if needed, but requirements say Google only -->
+                <hr>
+                <p class="text-muted">Or sign in with email (Admin only)</p>
+                <form class="login" method="POST" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+                    {% bootstrap_button "Sign In" button_type="submit" button_class="btn-primary w-100" %}
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

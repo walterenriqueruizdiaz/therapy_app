@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+{% block title %}Edit Session{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">Edit Session</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>Appointment Details</h5>
+                    <p class="mb-1"><strong>Patient:</strong> {{ session.appointment.patient }}</p>
+                    <p class="mb-1"><strong>Date:</strong> {{ session.appointment.date_time|date:"l, F d, Y" }}</p>
+                    <p class="mb-1"><strong>Time:</strong> {{ session.appointment.date_time|date:"H:i" }}</p>
+                </div>
+
+                <hr>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'schedule' %}" class="btn btn-secondary">Cancel</a>
+                        {% bootstrap_button button_type="submit" content="Save Changes" %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
